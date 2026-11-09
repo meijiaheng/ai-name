@@ -1,0 +1,77 @@
+﻿.\node_modules\.bin\vercel.cmd : Vercel CLI 65.12.1
+所在位置 行:1 字符: 65
++ ... ew-chat-1"; .\node_modules\.bin\vercel.cmd deploy --prod --non-intera ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 65.12.1:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Deploying ai-name-platform
+Uploading [--------------------] (0.0B/6.7KB)
+Uploading [=====---------------] (1.8KB/6.7KB)
+Uploading [====================] (6.7KB/6.7KB)
+  Inspect         https://vercel.com/meijiaheng/ai-name-platform/FkCLiYsyYCq1QWZDe35n7nXSDcUH
+  Production      https://ai-name-platform-kso86ykz3-meijiaheng.vercel.app
+Building…
+Building…
+Running build in Washington, D.C., USA (East) – iad1
+Build machine configuration: 2 cores, 8 GB
+Retrieving list of deployment files...
+Downloading 11 deployment files...
+Restored build cache from previous deployment (7dca1tF323dEfdqEaCe5tfw5LogF)
+Running "vercel build"
+Vercel CLI 65.11.0
+WARNING! Due to `builds` existing in your configuration file, the Build and Development Settings defined in your Projec
+t Settings will not apply. Learn More: https://vercel.link/unused-build-settings
+Installing dependencies...
+npm warn Unknown env config "cache-dir". This will stop working in the next major version of npm. See `npm help npmrc` 
+for supported config options.
+> ai-name-platform@1.0.0 postinstall
+> node scripts/selftest-supabase.js || exit 0
+[selftest] project: [REDACTED]
+[selftest] insert: {"ok":true,"rows":1}
+[selftest] select: {"ok":true,"rows":1}
+[selftest] delete: {"ok":true}
+up to date in 1s
+1 package is looking for funding
+run `npm fund` for details
+Build Completed in /vercel/output [3s]
+Deploying outputs...
+[2K[1A[2K[G  Production      https://ai-name-platform-kso86ykz3-meijiaheng.vercel.app
+Completing…
+▲ Aliased         https://ai-name-platform.vercel.app
+{
+  "status": "ok",
+  "deployment": {
+    "id": "dpl_FkCLiYsyYCq1QWZDe35n7nXSDcUH",
+    "url": "https://ai-name-platform-kso86ykz3-meijiaheng.vercel.app",
+    "productionUrl": "https://ai-name-platform.vercel.app",
+    "inspectorUrl": "https://vercel.com/meijiaheng/ai-name-platform/FkCLiYsyYCq1QWZDe35n7nXSDcUH",
+    "readyState": "READY",
+    "target": "production",
+    "environment": "production",
+    "deploymentApiUrl": "https://api.vercel.com/v13/deployments/dpl_FkCLiYsyYCq1QWZDe35n7nXSDcUH",
+    "buildMachine": {
+      "cores": 2,
+      "memory": 8192,
+      "machine": "basic",
+      "selectionType": "fixed",
+      "selectionSource": "plan-default"
+    },
+    "deploymentProtection": []
+  },
+  "message": "Deployment ai-name-platform-kso86ykz3-meijiaheng.vercel.app ready. Production URL: https://ai-name-platform.vercel.app",
+  "next": [
+    {
+      "command": "vercel curl https://ai-name-platform.vercel.app",
+      "when": "Verify deployment, including when Deployment Protection is enabled"
+    },
+    {
+      "command": "vercel inspect ai-name-platform-kso86ykz3-meijiaheng.vercel.app --non-interactive",
+      "when": "Inspect deployment"
+    },
+    {
+      "command": "vercel deploy --prod --non-interactive",
+      "when": "Promote to production"
+    }
+  ]
+}

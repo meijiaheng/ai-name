@@ -17,6 +17,14 @@
 └─ package.json
 ```
 
+## 当前接入的 Supabase
+
+- 项目：`https://vqfobqdzkghjprfjzlag.supabase.co`
+- 表 `public.name_history` 已创建（id / user_requirement / name_result / model_name / created_at）
+- RLS 已开启，策略两条：anon 可 insert（`with check (true)`）、anon 可 select（`using (true)`）
+- 线上 Vercel 已注入 `SUPABASE_URL`、`SUPABASE_ANON_KEY`（Production）
+- 注意：`*.supabase.co` 在国内网络会被重置，本地 `npm run dev` 写库会失败；Vercel（美国 iad1）访问正常
+
 ## 线上部署状态
 
 - Vercel 项目：`ai-name-platform`（账号 meijiaheng）

@@ -1,0 +1,17 @@
+﻿.\node_modules\.bin\vercel.cmd : Vercel CLI 65.12.1
+所在位置 行:1 字符: 281
++ ... d4-ebdef" | .\node_modules\.bin\vercel.cmd env add DOUBAO_API_KEY --e ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 65.12.1:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Retrieving project…
+> Removed trailing newline from stdin input
+Saving…
+
+✓ Added           DOUBAO_API_KEY
+  Project         meijiaheng/ai-name-platform
+  Environments    Production
+  Type            Secret
+  Stored as Secret by default. This value is hidden in the dashboard and unavailable to pulls; use `--type config` for 
+values you need to read later.
