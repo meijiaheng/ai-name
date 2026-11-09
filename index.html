@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>取名 · AI 起名平台</title>
+<style>
+  :root {
+    --paper: #f6f4ee;
+    --card: #fffdf8;
+    --ink: #232019;
+    --ink-soft: #6b6558;
+    --line: #e2ddd0;
+    --accent: #2f6b5e;
+    --accent-soft: #e7f0ec;
+    --warn: #a4622a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 64px; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+  h1 { margin: 0; font-size: 30px; letter-spacing: 4px; font-family: "Songti SC", "SimSun", serif; }
+  h1 span { color: var(--accent); }
+  .sub { margin: 8px 0 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+  .layout { display: grid; grid-template-columns: 340px 1fr; gap: 22px; margin-top: 26px; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .panel h2 { margin: 0 0 14px; font-size: 14px; font-weight: 600; letter-spacing: 1px; color: var(--ink-soft); }
+  label { display: block; font-size: 13px; color: var(--ink-soft); margin: 14px 0 6px; }
+  textarea, select, input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px;
+    background: #fff; color: var(--ink); font-size: 14px; font-family: inherit; outline: none;
+  }
+  textarea { min-height: 96px; resize: vertical; line-height: 1.7; }
+  textarea:focus, select:focus, input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .btn {
+    width: 100%; margin-top: 18px; padding: 12px 16px; border: none; border-radius: 10px;
+    background: var(--accent); color: #fff; font-size: 15px; letter-spacing: 2px; cursor: pointer;
+  }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+  .hint { margin-top: 12px; font-size: 12px; color: var(--ink-soft); line-height: 1.7; }
+  .status { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: var(--accent-soft); color: var(--accent); }
+  .status.warn { background: #faf0e4; color: var(--warn); }
+  .stream {
+    white-space: pre-wrap; line-height: 2; font-size: 14px; color: var(--ink);
+    min-height: 180px; font-family: "Songti SC", "SimSun", serif;
+  }
+  .stream .caret { display: inline-block; width: 8px; height: 2px; background: var(--accent); vertical-align: middle; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .empty { color: var(--ink-soft); font-size: 14px; line-height: 2; }
+  .cards { display: grid; gap: 12px; }
+  .name-card { border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 14px 16px; background: #fff; }
+  .name-card .top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .name-card .nm { font-size: 24px; letter-spacing: 3px; font-family: "Songti SC", "SimSun", serif; }
+  .name-card .py { font-size: 12px; color: var(--ink-soft); letter-spacing: .5px; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  .name-card .mean { margin-top: 8px; font-size: 13px; line-height: 1.9; color: #4a453b; }
+  .history { margin-top: 26px; }
+  .hist-item { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; background: #fff; }
+  .hist-item .row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--ink-soft); }
+  .hist-item .req { font-size: 14px; color: var(--ink); margin-bottom: 4px; }
+  .hist-item pre { margin: 10px 0 0; padding: 10px; background: #faf8f2; border-radius: 8px; font-size: 12.5px; line-height: 1.8; white-space: pre-wrap; font-family: inherit; color: #4a453b; display: none; }
+  .hist-item.open pre { display: block; }
+  .hist-item .row { cursor: pointer; }
+  .err { color: #b23b3b; font-size: 13px; margin-top: 10px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>取<span>名</span></h1>
+      <p class="sub">多模型接入 · 流式生成 · 历史留存　|　豆包 / DeepSeek / 通义千问 / Kimi 一套代码切换</p>
+    </div>
+    <div class="sub" id="envBadge"></div>
+  </header>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>起名需求</h2>
+      <label for="requirement">想要什么样的名字</label>
+      <textarea id="requirement" placeholder="例如：男孩、姓沈、国风、寓意坚韧有书卷气；或“英文名，好读好记”"></textarea>
+
+      <label for="style">风格倾向（可选）</label>
+      <select id="style">
+        <option value="">不限定，交给 AI 判断</option>
+        <option value="国风">国风</option>
+        <option value="现代简约">现代简约</option>
+        <option value="英文名">英文名</option>
+        <option value="中性">中性</option>
+      </select>
+
+      <label for="model">选择模型</label>
+      <select id="model">
+        <option value="doubao">豆包（火山方舟）</option>
+        <option value="deepseek">DeepSeek</option>
+        <option value="qwen">通义千问</option>
+        <option value="kimi">Kimi</option>
+      </select>
+
+      <button class="btn" id="go">开始起名</button>
+      <p class="hint">没配置密钥的模型会自动走演示模式，输出结构与真实结果一致；配置密钥后即为真实 AI 生成。</p>
+      <p id="inlineErr" class="err"></p>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2>生成结果 <span class="status" id="statusPill" style="display:none"></span></h2>
+        <div id="output" class="stream"><p class="empty">左侧填写需求，点「开始起名」，名字会一个字一个字地流出来。</p></div>
+        <div id="cards" class="cards"></div>
+      </div>
+
+      <div class="panel history">
+        <h2>起名历史 <span class="status" id="histPill" style="display:none"></span></h2>
+        <div id="history"><p class="empty">加载中…</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const outputEl = document.getElementById('output');
+const cardsEl = document.getElementById('cards');
+const statusPill = document.getElementById('statusPill');
+const inlineErr = document.getElementById('inlineErr');
+const goBtn = document.getElementById('go');
+const historyEl = document.getElementById('history');
+const histPill = document.getElementById('histPill');
+
+function setStatus(text, warn) {
+  statusPill.style.display = text ? 'inline-block' : 'none';
+  statusPill.textContent = text || '';
+  statusPill.className = 'status' + (warn ? ' warn' : '');
+}
+
+function parseCards(text) {
+  return text
+    .split(/\n\s*\n/)
+    .map((block) => {
+      const get = (key) => {
+        const m = block.match(new RegExp(key + '：\\s*(.*)'));
+        return m ? m[1].trim() : '';
+      };
+      return { name: get('名字'), py: get('读音'), mean: get('寓意'), style: get('风格') };
+    })
+    .filter((c) => c.name);
+}
+
+function renderCards(text) {
+  const cards = parseCards(text);
+  if (!cards.length) {
+    cardsEl.innerHTML = '';
+    return;
+  }
+  cardsEl.innerHTML = cards
+    .map(
+      (c) => `
+      <div class="name-card">
+        <div class="top">
+          <span class="nm">${escapeHtml(c.name)}</span>
+          ${c.py ? `<span class="py">${escapeHtml(c.py)}</span>` : ''}
+          ${c.style ? `<span class="tag">${escapeHtml(c.style)}</span>` : ''}
+        </div>
+        ${c.mean ? `<div class="mean">${escapeHtml(c.mean)}</div>` : ''}
+      </div>`
+    )
+    .join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+}
+
+async function generate() {
+  const requirement = document.getElementById('requirement').value.trim();
+  const style = document.getElementById('style').value;
+  const model = document.getElementById('model').value;
+
+  inlineErr.textContent = '';
+  if (!requirement) {
+    inlineErr.textContent = '请先写下起名需求。';
+    return;
+  }
+
+  goBtn.disabled = true;
+  cardsEl.innerHTML = '';
+  setStatus('生成中…', false);
+  outputEl.innerHTML = '<span class="caret"></span>';
+  let full = '';
+
+  try {
+    const resp = await fetch('/api/name', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requirement, style, model }),
+    });
+
+    if (!resp.ok) {
+      const j = await resp.json().catch(() => ({ error: resp.statusText }));
+      throw new Error(j.error || '请求失败');
+    }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let sep;
+      while ((sep = buffer.indexOf('\n\n')) !== -1) {
+        const raw = buffer.slice(0, sep);
+        buffer = buffer.slice(sep + 2);
+        const line = raw.split('\n').find((l) => l.trim().startsWith('data:'));
+        if (!line) continue;
+        let evt;
+        try {
+          evt = JSON.parse(line.trim().slice(5).trim());
+        } catch {
+          continue;
+        }
+        if (evt.t) {
+          full += evt.t;
+          outputEl.textContent = full;
+          outputEl.innerHTML = escapeHtml(full) + '<span class="caret"></span>';
+        } else if (evt.error) {
+          inlineErr.textContent = evt.error;
+        } else if (evt.done) {
+          finish(full, evt);
+        }
+      }
+    }
+  } catch (err) {
+    inlineErr.textContent = err.message;
+    setStatus('', false);
+  } finally {
+    goBtn.disabled = false;
+  }
+}
+
+let finished = false;
+function finish(full, evt) {
+  if (finished) return;
+  finished = true;
+  outputEl.innerHTML = escapeHtml(full);
+  renderCards(full);
+
+  const bits = [];
+  bits.push(evt.demo ? '演示模式' : '真实模型');
+  bits.push(evt.model || '');
+  setStatus(bits.filter(Boolean).join(' · '), false);
+
+  if (evt.saved && evt.saved.saved) {
+    setStatus(`${bits.join(' · ')} · 已存入 Supabase`, false);
+    setTimeout(loadHistory, 300);
+  } else if (evt.saved && evt.saved.reason) {
+    setStatus(`${bits.join(' · ')} · 未入库：${evt.saved.reason}`, true);
+  }
+}
+
+async function loadHistory() {
+  try {
+    const resp = await fetch('/api/history');
+    const j = await resp.json();
+    if (j.warning) {
+      histPill.style.display = 'inline-block';
+      histPill.className = 'status warn';
+      histPill.textContent = j.warning;
+    } else {
+      histPill.style.display = 'none';
+    }
+    const items = j.items || [];
+    if (!items.length) {
+      historyEl.innerHTML = '<p class="empty">还没有记录。成功起名一次并存入 Supabase 后，这里会出现历史。</p>';
+      return;
+    }
+    historyEl.innerHTML = items
+      .map(
+        (it) => `
+        <div class="hist-item">
+          <div class="row">
+            <span class="req">${escapeHtml(it.user_requirement)}</span>
+            <span>${escapeHtml(it.model_name || '')} · ${escapeHtml(it.created_at ? it.created_at.replace('T', ' ').slice(0, 16) : '')}</span>
+          </div>
+          <pre>${escapeHtml(it.name_result || '')}</pre>
+        </div>`
+      )
+      .join('');
+    historyEl.querySelectorAll('.hist-item .row').forEach((row) => {
+      row.addEventListener('click', () => row.parentElement.classList.toggle('open'));
+    });
+  } catch (err) {
+    historyEl.innerHTML = `<p class="empty">历史读取失败：${escapeHtml(err.message)}</p>`;
+  }
+}
+
+goBtn.addEventListener('click', () => {
+  finished = false;
+  generate();
+});
+
+loadHistory();
+</script>
+</body>
+</html>

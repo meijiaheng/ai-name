@@ -1,0 +1,9 @@
+server.js
+*.log
+*.txt
+_doc_extract.txt
+node_modules
+.env
+.env.local
+.env.*.local
+.vercel
