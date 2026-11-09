@@ -31,6 +31,8 @@
 - 生产地址：https://ai-name-platform.vercel.app
 - 部署方式：`api/*.js` 走 `@vercel/node`，`index.html` 走 `@vercel/static`（见 `vercel.json`）；`server.js` 仅本地用，已在 `.vercelignore` 排除
 - 已关闭 Vercel SSO 部署保护，公网可匿名访问
+- 环境变量（Production，均 Type=Secret）：`SUPABASE_URL`、`SUPABASE_ANON_KEY`、`DOUBAO_API_KEY`、`DOUBAO_MODEL`
+- 最近生产部署：`dpl_HaDRoQvkP4LvxZH1zKEcDZegRwJM`（READY，实体 `doubao-seed-evolving`，接入点 `ep-20261109231528-xcb4w`）
 - **国内网络提醒**：`*.vercel.app` 在国内会被 DNS 污染（本机解析到 `103.97.176.73`）或 TLS 重置，直连打不开，需要代理；这与部署成败无关（Vercel 侧状态为 Ready、别名已绑定）
 
 ## 快速开始
